@@ -8,7 +8,7 @@
 ```
 [![Tests for sprint 13](https://github.com/OlgaStrelk/express-mesto-gha/actions/workflows/tests-13-sprint.yml/badge.svg)](https://github.com///actions/workflows/tests-13-sprint.yml) 
 
-[![Tests for sprint 14](https://github.com/OlgaStrelk/express-mesto-gha/actions/workflows/tests-14-sprint.yml/badge.svg)](https://github.com/${имя_пользователя}/${имя репозитория}/actions/workflows/tests-14-sprint.yml)
+[![Tests for sprint 14](https://github.com/OlgaStrelk/express-mesto-gha/actions/workflows/tests-14-sprint.yml/badge.svg)](https://github.com//${имя репозитория}/actions/workflows/tests-14-sprint.yml)
 ```
 
 
