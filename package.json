@@ -1,0 +1,18 @@
+{
+  "name": "mesto-server",
+  "version": "1.0.0",
+  "description": "бекэнд интерактивной страницы с авторизацией",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OlgaStrelk/express-mesto-gha.git"
+  },
+  "author": "Olga Strelkova",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OlgaStrelk/express-mesto-gha/issues"
+  },
+  "homepage": "https://github.com/OlgaStrelk/express-mesto-gha#readme",
+  "devDependencies": {},
+  "dependencies": {}
+}
