@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "бекэнд интерактивной страницы с авторизацией",
   "main": "index.js",
+  "scripts": {
+    "start": "npm run start",
+    "dev": "npm run dev"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/OlgaStrelk/express-mesto-gha.git"
