@@ -14,6 +14,7 @@ router.post('/users', (req, res) => {
 
   User.create({ name, about, avatar })
     .then((user) => res.send({ data: user }))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));})
+    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+});
 
 module.exports = router;
