@@ -1,12 +1,19 @@
 const router = require('express').Router();
-const { users } = require('../db');
+const { User } = require('../models/user');
+
+router.get('/users', (req, res) => {
+  res.send('USERS');
+});
 
 router.get('/users/:id', (req, res) => {
-  if (!users[req.params.id]) {
-    res.send('Такого пользователя не существует');
-    return;
-  }
-  res.send(users[req.params.id]);
+  res.send('user ID');
 });
+
+router.post('/users', (req, res) => {
+  const { name, about, avatar } = req.body;
+
+  User.create({ name, about, avatar })
+    .then((user) => res.send({ data: user }))
+    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));})
 
 module.exports = router;
