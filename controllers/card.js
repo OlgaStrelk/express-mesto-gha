@@ -4,13 +4,13 @@ module.exports.createCard = (req, res) => {
   // res.send(req.user._id);
   const { name, link } = req.body;
 
-  Card.create({ name, link })
+  Card.create({ name, link, owner: req.user._id })
     .then((card) => res.send({ data: card }))
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 };
 
 module.exports.deleteCardById = (req, res) => {
-  Card.findById(req.params.id)
+  Card.findByIdAndRemove(req.params.id)
     .then((card) => res.send({ data: card }))
     .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
 };
