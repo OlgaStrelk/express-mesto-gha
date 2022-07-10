@@ -35,18 +35,17 @@ module.exports.getUsers = (req, res) => {
 module.exports.updateProfile = (req, res) => {
   const { name, about } = req.body;
 
-  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true })
-    .then((user) => res.send({ data: user }))
+  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
+    .then((user) => {
+      if (!user) {
+        res.status(404).send({ message: 'Пользователь с таким _id не найден.' });
+      } else {
+        res.send({ data: user });
+      }
+    })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(404).send({ message: 'Пользователь с таким id не найден' });
-        return;
-      }
-      if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные пользователя' });
-        return;
-      }
-      res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
+      if (err.name === 'ValidationError') return res.status(400).send({ message: 'Переданы некорректные данные пользователя.' });
+      return res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
     });
 };
 
