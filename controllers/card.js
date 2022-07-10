@@ -15,10 +15,15 @@ module.exports.createCard = (req, res) => {
 
 module.exports.deleteCardById = (req, res) => {
   Card.findByIdAndRemove(req.params.cardId)
-    .then((card) => res.send({ data: card }))
-    .catch((err) => {
-      if (err.name === '') {
+    .then((card) => {
+      if (!card) {
         res.status(404).send({ message: 'Карточка с указанным _id не найдена' });
+      }
+      res.send({ data: card });
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные карточки' });
       }
       res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
     });
