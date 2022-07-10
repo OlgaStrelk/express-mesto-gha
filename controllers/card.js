@@ -41,15 +41,15 @@ module.exports.likeCard = (req, res) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
-    .then((card) => { res.send({ data: card }); })
+    .then((card) => {
+      if (!card) {
+        res.status(404).send({ message: 'Передан несуществующий id карточки.' });
+      }
+      res.send({ data: card });
+    })
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(400).send({ message: 'Передан несуществующий id карточки' });
-        return;
-      }
-      if (err.name === 'ValidationError') {
-        res.status(404).send({ message: 'Переданы некорректные данные для постановки лайка.' });
-        return;
       }
       res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
     });
