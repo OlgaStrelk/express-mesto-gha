@@ -61,16 +61,16 @@ module.exports.dislikeCard = (req, res) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
-    .then((card) => { res.send({ data: card }); })
-    .catch(((err) => {
-      if (err.name === 'CastError') {
-        res.status(404).send({ message: 'Передан несуществующий id карточки' });
-        return;
+    .then((card) => {
+      if (!card) {
+        res.status(404).send({ message: 'Передан несуществующий id карточки.' });
       }
-      if (err.name === 'ValidationError') {
+      res.send({ data: card });
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
         res.status(400).send({ message: 'Переданы некорректные данные для снятия лайка.' });
-        return;
       }
       res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
-    }));
+    });
 };
