@@ -18,7 +18,7 @@ module.exports.getUserById = (req, res) => {
     .then((user) => res.send({ data: user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(404).send({ message: 'Пользователь с таким id не найден' });
+        res.status(400).send({ message: 'Пользователь с таким id не найден' });
       }
       res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
     });
