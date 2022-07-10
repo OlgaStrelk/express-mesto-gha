@@ -5,7 +5,12 @@ module.exports.createCard = (req, res) => {
 
   Card.create({ name, link, owner: req.user._id })
     .then((card) => res.send({ data: card }))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные пользователя' });
+      }
+      res.status(500).send({ message: 'Произошла ошибка' });
+    });
 };
 
 module.exports.deleteCardById = (req, res) => {
