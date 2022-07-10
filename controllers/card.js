@@ -41,7 +41,7 @@ module.exports.likeCard = (req, res) => {
     { $addToSet: { likes: req.user._id } },
     { new: true },
   )
-    .then(() => { res.send('Лайк'); })
+    .then((card) => { res.send({ data: card }); })
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(404).send({ message: 'Передан несуществующий id карточки' });
@@ -61,7 +61,7 @@ module.exports.dislikeCard = (req, res) => {
     { $pull: { likes: req.user._id } },
     { new: true },
   )
-    .then(() => { res.send('Дизлайк'); })
+    .then((card) => { res.send({ data: card }); })
     .catch(((err) => {
       if (err.name === 'CastError') {
         res.status(404).send({ message: 'Передан несуществующий id карточки' });
