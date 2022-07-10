@@ -7,9 +7,9 @@ module.exports.createCard = (req, res) => {
     .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные пользователя' });
+        res.status(400).send({ message: 'Переданы некорректные данные карточки' });
       }
-      res.status(500).send({ message: 'Произошла ошибка' });
+      res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
     });
 };
 
@@ -20,14 +20,19 @@ module.exports.deleteCardById = (req, res) => {
       if (err.name === '') {
         res.status(404).send({ message: 'Карточка с указанным _id не найдена' });
       }
-      res.status(500).send({ message: 'Произошла ошибка' });
+      res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
     });
 };
 
 module.exports.getCards = (req, res) => {
   Card.find({})
     .then((card) => res.send({ data: card }))
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch((err) => {
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные карточки' });
+      }
+      res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
+    });
 };
 
 module.exports.likeCard = (req, res) => {
@@ -37,7 +42,17 @@ module.exports.likeCard = (req, res) => {
     { new: true },
   )
     .then(() => { res.send('Лайк'); })
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        res.status(404).send({ message: 'Передан несуществующий id карточки' });
+        return;
+      }
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные для постановки лайка.' });
+        return;
+      }
+      res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
+    });
 };
 
 module.exports.dislikeCard = (req, res) => {
@@ -47,5 +62,15 @@ module.exports.dislikeCard = (req, res) => {
     { new: true },
   )
     .then(() => { res.send('Дизлайк'); })
-    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+    .catch(((err) => {
+      if (err.name === 'CastError') {
+        res.status(404).send({ message: 'Передан несуществующий id карточки' });
+        return;
+      }
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные для снятия лайка.' });
+        return;
+      }
+      res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
+    }));
 };
