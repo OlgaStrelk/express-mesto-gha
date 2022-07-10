@@ -44,11 +44,11 @@ module.exports.likeCard = (req, res) => {
     .then((card) => { res.send({ data: card }); })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(404).send({ message: 'Передан несуществующий id карточки' });
+        res.status(400).send({ message: 'Передан несуществующий id карточки' });
         return;
       }
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные для постановки лайка.' });
+        res.status(404).send({ message: 'Переданы некорректные данные для постановки лайка.' });
         return;
       }
       res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
