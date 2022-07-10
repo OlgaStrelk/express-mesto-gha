@@ -22,7 +22,7 @@ module.exports.deleteCardById = (req, res) => {
       res.send({ data: card });
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') {
+      if (err.name === 'CastError') {
         res.status(400).send({ message: 'Переданы некорректные данные карточки' });
       }
       res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
