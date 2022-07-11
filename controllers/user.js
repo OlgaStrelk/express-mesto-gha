@@ -1,3 +1,5 @@
+// const bcrypt = require('bcryptjs'); // модуль для хэширования пароля
+// const jwt = require('jsonwebtoken'); модуль для создания токена
 const User = require('../models/user');
 
 module.exports.createUser = (req, res) => {

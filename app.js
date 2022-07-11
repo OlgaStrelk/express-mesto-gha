@@ -25,6 +25,10 @@ app.use('/', cardRouter);
 app.use((req, res) => {
   res.status(404).send({ message: 'Страница не найдена' });
 });
+// добавить мидллвэр для централизованной обработки ошибки
+// app.use((err, req, res, next) => {
+//   // это обработчик ошибки
+// });
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
