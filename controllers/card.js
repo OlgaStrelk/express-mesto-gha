@@ -8,8 +8,9 @@ module.exports.createCard = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Переданы некорректные данные карточки' });
+      } else {
+        res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
       }
-      res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
     });
 };
 
@@ -18,14 +19,16 @@ module.exports.deleteCardById = (req, res) => {
     .then((card) => {
       if (!card) {
         res.status(404).send({ message: 'Карточка с указанным _id не найдена' });
+      } else {
+        res.send({ data: card });
       }
-      res.send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(400).send({ message: 'Переданы некорректные данные карточки' });
+      } else {
+        res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
       }
-      res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
     });
 };
 
@@ -35,8 +38,9 @@ module.exports.getCards = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Переданы некорректные данные карточки' });
+      } else {
+        res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
       }
-      res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
     });
 };
 
@@ -49,14 +53,16 @@ module.exports.likeCard = (req, res) => {
     .then((card) => {
       if (!card) {
         res.status(404).send({ message: 'Передан несуществующий id карточки.' });
+      } else {
+        res.send({ data: card });
       }
-      res.send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(400).send({ message: 'Переданы некорректные данные для постановки лайка.' });
+      } else {
+        res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
       }
-      res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
     });
 };
 
@@ -69,13 +75,15 @@ module.exports.dislikeCard = (req, res) => {
     .then((card) => {
       if (!card) {
         res.status(404).send({ message: 'Передан несуществующий id карточки.' });
+      } else {
+        res.send({ data: card });
       }
-      res.send({ data: card });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
         res.status(400).send({ message: 'Переданы некорректные данные для снятия лайка.' });
+      } else {
+        res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
       }
-      res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
     });
 };
