@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
+// const cookieParser = require('cookie-parser');
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
 
@@ -11,6 +12,8 @@ mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// app.use(cookieParser());
 
 app.use((req, res, next) => {
   req.user = {
@@ -27,7 +30,16 @@ app.use((req, res) => {
 });
 // добавить мидллвэр для централизованной обработки ошибки
 // app.use((err, req, res, next) => {
-//   // это обработчик ошибки
+// const { statusCode = 500, message } = err;
+
+// res
+//   .status(statusCode)
+//   .send({
+//    // проверяем статус и выставляем сообщение в зависимости от него
+//     message: statusCode === 500
+//       ? 'На сервере произошла ошибка'
+//       : message
+//   });
 // });
 
 app.listen(PORT, () => {
