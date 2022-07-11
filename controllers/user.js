@@ -8,8 +8,9 @@ module.exports.createUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(400).send({ message: 'Переданы некорректные данные пользователя' });
+      } else {
+        res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
       }
-      res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
     });
 };
 
@@ -18,11 +19,14 @@ module.exports.getUserById = (req, res) => {
     .then((user) => {
       if (!user) {
         res.status(404).send({ message: 'Пользователь с таким id не найден' });
-      } res.send({ data: user });
+      } else {
+        res.send({ data: user });
+      }
     })
     .catch((err) => {
-      if (err.name === 'CastError') return res.status(400).send({ message: 'Отправлены некорректные данные' });
-      return res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
+      if (err.name === 'CastError') { res.status(400).send({ message: 'Отправлены некорректные данные' }); } else {
+        res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
+      }
     });
 };
 
@@ -44,8 +48,11 @@ module.exports.updateProfile = (req, res) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'ValidationError') return res.status(400).send({ message: 'Переданы некорректные данные пользователя.' });
-      return res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
+      if (err.name === 'ValidationError') {
+        res.status(400).send({ message: 'Переданы некорректные данные пользователя.' });
+      } else {
+        res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
+      }
     });
 };
 
@@ -53,17 +60,17 @@ module.exports.updateAvatar = (req, res) => {
   const { avatar } = req.body;
 
   User.findByIdAndUpdate(req.user._id, { avatar }, { new: true })
-    .then((user) => res.send({ data: user }))
-    .catch((err) => {
-      if (err.name === 'CastError') {
+    .then((user) => {
+      if (!user) {
         res.status(404).send({ message: 'Пользователь с таким id не найден' });
-        return;
-      }
+      } else { res.send({ data: user }); }
+    })
+    .catch((err) => {
       if (err.name === 'ValidationError') {
         res.status(400)
           .send({ message: 'Переданы некорректные данные при обновлении аватара' });
-        return;
+      } else {
+        res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
       }
-      res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
     });
 };
