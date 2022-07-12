@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const validator = require('validator');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -24,12 +25,24 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
     unique: true,
+    validate: {
+      validator(email) {
+        return validator.isEmail(email);
+      },
+      message: 'Не является email',
+    },
   },
 
   password: {
     type: String,
     required: true,
     select: false,
+    validate: {
+      validator(password) {
+        return validator.isStrongPassword(password);
+      },
+      message: 'Пароль недостаточно надёжный',
+    },
   },
 });
 
