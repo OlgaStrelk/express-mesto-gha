@@ -1,24 +1,4 @@
-const bcrypt = require('bcryptjs'); // модуль для хэширования пароля
-// const jwt = require('jsonwebtoken'); модуль для создания токена
 const User = require('../models/user');
-
-module.exports.createUser = (req, res) => {
-  const {
-    name, about, avatar, email, password,
-  } = req.body;
-  bcrypt.hash(password, 10)
-    .then((hash) => User.create({
-      name, about, avatar, email, password: hash,
-    }))
-    .then((user) => res.send({ data: user }))
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные пользователя' });
-      } else {
-        res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
-      }
-    });
-};
 
 module.exports.getUserById = (req, res) => {
   User.findById(req.params.id)
@@ -78,28 +58,5 @@ module.exports.updateAvatar = (req, res) => {
       } else {
         res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
       }
-    });
-};
-
-module.exports.login = (req, res) => {
-  const { email, password } = req.body;
-
-  User.findOne({ email })
-    .then((user) => {
-      if (!user) {
-        res.status(404).send({ message: 'Неправильные почта или пароль' });
-      } else { bcrypt.compare(password, user.password); }
-    })
-    .then((matched) => {
-      if (!matched) {
-        res.status(404).send({ message: 'Неправильные почта или пароль' });
-      }
-
-      res.send({ message: 'Всё верно!' });
-    })
-    .catch((err) => {
-      res
-        .status(401)
-        .send({ message: err.message });
     });
 };
