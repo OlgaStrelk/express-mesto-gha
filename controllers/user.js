@@ -80,3 +80,26 @@ module.exports.updateAvatar = (req, res) => {
       }
     });
 };
+
+module.exports.login = (req, res) => {
+  const { email, password } = req.body;
+
+  User.findOne({ email })
+    .then((user) => {
+      if (!user) {
+        res.status(404).send({ message: 'Неправильные почта или пароль' });
+      } else { bcrypt.compare(password, user.password); }
+    })
+    .then((matched) => {
+      if (!matched) {
+        res.status(404).send({ message: 'Неправильные почта или пароль' });
+      }
+
+      res.send({ message: 'Всё верно!' });
+    })
+    .catch((err) => {
+      res
+        .status(401)
+        .send({ message: err.message });
+    });
+};
