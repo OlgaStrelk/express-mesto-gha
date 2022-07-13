@@ -4,8 +4,6 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 // const helmet = require('helmet');
 // const cookieParser = require('cookie-parser');
-const userRouter = require('./routes/users');
-const cardRouter = require('./routes/cards');
 const authRouter = require('./routes/index');
 const auth = require('./middlewares/auth');
 
@@ -27,12 +25,14 @@ app.use((req, res, next) => {
 
   next();
 });
+
 app.use('/', authRouter);
 
 app.use(auth);
 
-app.use('/', userRouter);
-app.use('/', cardRouter);
+app.use('/', require('./routes/users'));
+app.use('/', require('./routes/cards'));
+
 app.use((req, res) => {
   res.status(404).send({ message: 'Страница не найдена' });
 });
