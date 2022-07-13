@@ -6,6 +6,8 @@ const bodyParser = require('body-parser');
 // const cookieParser = require('cookie-parser');
 const userRouter = require('./routes/users');
 const cardRouter = require('./routes/cards');
+const authRouter = require('./routes/index');
+const auth = require('./middlewares/auth');
 
 const app = express();
 const { PORT = 3000 } = process.env;
@@ -25,6 +27,9 @@ app.use((req, res, next) => {
 
   next();
 });
+app.use('/', authRouter);
+
+app.use(auth);
 
 app.use('/', userRouter);
 app.use('/', cardRouter);
