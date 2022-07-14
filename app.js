@@ -4,7 +4,6 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 // const helmet = require('helmet');
 // const cookieParser = require('cookie-parser');
-const authRouter = require('./routes/index');
 const auth = require('./middlewares/auth');
 
 const app = express();
@@ -18,24 +17,15 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // app.use(cookieParser());
 // app.use(helmet());
 
-app.use((req, res, next) => {
-  req.user = {
-    _id: '62c9dea2650c3cbf3890c462',
-  };
+app.use('/', require('./routes/index'));
 
-  next();
-});
-
-app.use('/', authRouter);
-
-app.use(auth);
-
-app.use('/', require('./routes/users'));
-app.use('/', require('./routes/cards'));
+app.use('/', auth, require('./routes/users'));
+app.use('/', auth, require('./routes/cards'));
 
 app.use((req, res) => {
   res.status(404).send({ message: 'Страница не найдена' });
 });
+
 // добавить мидллвэр для централизованной обработки ошибки
 // app.use((err, req, res, next) => {
 // const { statusCode = 500, message } = err;
