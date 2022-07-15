@@ -4,16 +4,17 @@ const User = require('../models/user');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
 const DUPLICATED_DATA_ERROR = 11000;
+const SAULT_ROUNDS = 10;
 
 module.exports.createUser = (req, res) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-  bcrypt.hash(password, 10)
+  bcrypt.hash(password, SAULT_ROUNDS)
     .then((hash) => User.create({
       name, about, avatar, email, password: hash,
     }))
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.status(201).send(`Пользователь ${user.name} с почтой ${user.email} зарегистрирован`))
     .catch((err) => {
       if (err.code === DUPLICATED_DATA_ERROR) {
         return res.status(409).send({ message: 'Данный email уже занят' });
