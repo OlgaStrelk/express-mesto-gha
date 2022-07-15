@@ -41,8 +41,10 @@ module.exports.login = (req, res) => {
         .end();
     })
     .catch((err) => {
-      res
-        .status(401)
-        .send({ message: err.message });
+      if (err.name === 'ValidationError') {
+        return res.status(400).send({ message: 'Переданы некорректные данные пользователя' });
+      }
+      if (err.statusCode === 403) res.status(403).send({ message: err.message });
+      return res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
     });
 };
