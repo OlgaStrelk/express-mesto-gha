@@ -38,7 +38,7 @@ module.exports.login = (req, res) => {
           maxAge: 3600000 * 7,
           httpOnly: true,
         })
-        .end();
+        .send({ token });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
