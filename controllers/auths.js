@@ -3,25 +3,25 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
+const DUPLICATED_DATA_ERROR = 11000;
 
 module.exports.createUser = (req, res) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
-
-//   return res.status(409).send({ message: 'email занят' });
-
   bcrypt.hash(password, 10)
     .then((hash) => User.create({
       name, about, avatar, email, password: hash,
     }))
     .then((user) => res.send({ data: user }))
     .catch((err) => {
-      if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные пользователя' });
-      } else {
-        res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
+      if (err.code === DUPLICATED_DATA_ERROR) {
+        return res.status(409).send({ message: 'Данный email уже занят' });
       }
+      if (err.name === 'ValidationError') {
+        return res.status(400).send({ message: 'Переданы некорректные данные пользователя' });
+      }
+      return res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
     });
 };
 
