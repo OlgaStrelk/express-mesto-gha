@@ -6,7 +6,7 @@ const errorWrongEmailOrPassword = () => {
   const err = new Error('Неправильные почта или пароль');
   err.statusCode = 403;
   throw err;
-}
+};
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -56,13 +56,13 @@ userSchema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email })
     .then((user) => {
       if (!user) {
-        errorWrongEmailOrPassword()
+        errorWrongEmailOrPassword();
       }
 
       return bcrypt.compare(password, user.password)
         .then((matched) => {
           if (!matched) {
-            errorWrongEmailOrPassword()
+            errorWrongEmailOrPassword();
           }
           return user;
         });
