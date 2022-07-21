@@ -22,6 +22,12 @@ module.exports.getUsers = (req, res) => {
     .catch(() => res.status(500).send({ message: 'Произошла ошибка на стороне сервера' }));
 };
 
+module.exports.getProfile = (req, res) => {
+  User.findById(req.user._id)
+    .then((user) => res.send({ data: user }))
+    .catch(() => res.status(500).send({ message: 'Произошла ошибка на стороне сервера' }));
+};
+
 module.exports.updateProfile = (req, res) => {
   const { name, about } = req.body;
 
