@@ -1,5 +1,4 @@
 const bcrypt = require('bcryptjs');
-// const jwt = require('jsonwebtoken');
 const { generateToken } = require('../helpers/jwt');
 const User = require('../models/user');
 
@@ -29,24 +28,23 @@ module.exports.createUser = (req, res) => {
 
 module.exports.login = (req, res) => {
   const { email, password } = req.body;
-
-  return User.findUserByCredentials(email, password)
+  User.findUserByCredentials(email, password)
     .then((user) => {
-      generateToken({ email: user.email })
-        .then((token) => {
-          res
-            .cookie('jwt', token, {
-              maxAge: 3600000 * 7,
-              httpOnly: true,
-            })
-            .send({ token });
-        });
+      const token = generateToken({ _id: user._id });
+      res
+        .cookie('jwt', token, {
+          maxAge: 3600000 * 7,
+          httpOnly: true,
+        })
+        .send({ token });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         return res.status(400).send({ message: 'Переданы некорректные данные пользователя' });
       }
-      if (err.statusCode === 403) res.status(403).send({ message: err.message });
+      if (err.statusCode === 403) {
+        return res.status(403).send({ message: err.message });
+      }
       return res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
     });
 };

@@ -19,10 +19,9 @@ const isAuthorized = (req, res, next) => {
   } catch (err) {
     throwUnauthorizedError();
   }
-
   req.user = payload;
 
   next();
 };
 
-module.exports = { isAuthorized };
+module.exports = isAuthorized;
