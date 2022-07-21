@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
 // const helmet = require('helmet');
 // const cookieParser = require('cookie-parser');
-const auth = require('./middlewares/auth');
+const isAuthorized = require('./middlewares/isAuthorized');
 
 const app = express();
 const { PORT = 3000 } = process.env;
@@ -19,26 +19,25 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use('/', require('./routes/index'));
 
-app.use('/', auth, require('./routes/users'));
-app.use('/', auth, require('./routes/cards'));
+app.use('/', isAuthorized, require('./routes/users'));
+app.use('/', isAuthorized, require('./routes/cards'));
 
 app.use((req, res) => {
   res.status(404).send({ message: 'Страница не найдена' });
 });
 
 // добавить мидллвэр для централизованной обработки ошибки
-// app.use((err, req, res, next) => {
-// const { statusCode = 500, message } = err;
-
-// res
-//   .status(statusCode)
-//   .send({
-//    // проверяем статус и выставляем сообщение в зависимости от него
-//     message: statusCode === 500
-//       ? 'На сервере произошла ошибка'
-//       : message
-//   });
-// });
+app.use((err, req, res, next) => {
+  const { statusCode = 500, message } = err;
+  res
+    .status(statusCode)
+    .send({
+      // проверяем статус и выставляем сообщение в зависимости от него
+      message: statusCode === 500
+        ? 'На сервере произошла ошибка'
+        : message,
+    });
+});
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);

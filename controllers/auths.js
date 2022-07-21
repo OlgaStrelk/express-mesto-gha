@@ -1,8 +1,9 @@
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+// const jwt = require('jsonwebtoken');
+const { generateToken } = require('../helpers/jwt');
 const User = require('../models/user');
 
-const { NODE_ENV, JWT_SECRET } = process.env;
+// const { NODE_ENV, JWT_SECRET } = process.env;
 const DUPLICATED_DATA_ERROR = 11000;
 const SAULT_ROUNDS = 10;
 
@@ -31,14 +32,15 @@ module.exports.login = (req, res) => {
 
   return User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, NODE_ENV === 'production' ? JWT_SECRET : 'dev-secret');
-
-      res
-        .cookie('jwt', token, {
-          maxAge: 3600000 * 7,
-          httpOnly: true,
-        })
-        .send({ token });
+      generateToken({ email: user.email })
+        .then((token) => {
+          res
+            .cookie('jwt', token, {
+              maxAge: 3600000 * 7,
+              httpOnly: true,
+            })
+            .send({ token });
+        });
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
