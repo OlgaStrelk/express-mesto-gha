@@ -1,31 +1,31 @@
 const throwBadRequestError = (message) => {
   const error = new Error(message);
   error.statusCode = 400;
-  throw error;
+  return error;
 };
 
 const throwUnauthorizedError = () => {
   const error = new Error('Необходимо авторизоваться');
   error.statusCode = 401;
-  throw error;
+  return error;
 };
 
 const throwForbiddenError = (message) => {
   const error = new Error(message);
   error.statusCode = 403;
-  throw error;
+  return error;
 };
 
 const throwNotFoundError = (message) => {
   const error = new Error(message);
   error.statusCode = 404;
-  throw error;
+  return error;
 };
 
 const throwConflictError = () => {
   const error = new Error('Необходимо авторизоваться');
   error.statusCode = 409;
-  throw error;
+  return error;
 };
 
 module.exports = {

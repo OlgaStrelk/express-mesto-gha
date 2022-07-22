@@ -3,9 +3,9 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs');
 
 const errorWrongEmailOrPassword = () => {
-  const err = new Error('Неправильные почта или пароль');
-  err.statusCode = 403;
-  throw err;
+  const error = new Error('Неправильные почта или пароль');
+  error.statusCode = 403;
+  return error;
 };
 
 const userSchema = new mongoose.Schema({

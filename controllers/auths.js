@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const { generateToken } = require('../helpers/jwt');
 const User = require('../models/user');
+const { throwForbiddenError, throwBadRequestError } = require('../helpers/errors');
 
 // const { NODE_ENV, JWT_SECRET } = process.env;
 const DUPLICATED_DATA_ERROR = 11000;
@@ -26,7 +27,7 @@ module.exports.createUser = (req, res) => {
     });
 };
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   User.findUserByCredentials(email, password)
     .then((user) => {
@@ -40,11 +41,11 @@ module.exports.login = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        return res.status(400).send({ message: 'Переданы некорректные данные пользователя' });
+        next(throwBadRequestError('Переданы некорректные данные пользователя'));
       }
       if (err.statusCode === 403) {
-        return res.status(403).send({ message: err.message });
+        next(throwForbiddenError(err.message));
       }
-      return res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
+      next();
     });
 };
