@@ -22,8 +22,8 @@ const throwNotFoundError = (message) => {
   return error;
 };
 
-const throwConflictError = () => {
-  const error = new Error('Необходимо авторизоваться');
+const throwConflictError = (message) => {
+  const error = new Error(message);
   error.statusCode = 409;
   return error;
 };
