@@ -1,13 +1,13 @@
 const bcrypt = require('bcryptjs');
 const { generateToken } = require('../helpers/jwt');
 const User = require('../models/user');
-const { throwForbiddenError, throwBadRequestError } = require('../helpers/errors');
+const { throwForbiddenError, throwBadRequestError, throwConflictError } = require('../helpers/errors');
 
 // const { NODE_ENV, JWT_SECRET } = process.env;
 const DUPLICATED_DATA_ERROR = 11000;
 const SAULT_ROUNDS = 10;
 
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
@@ -18,12 +18,12 @@ module.exports.createUser = (req, res) => {
     .then((user) => res.status(201).send(`Пользователь ${user.name} с почтой ${user.email} зарегистрирован`))
     .catch((err) => {
       if (err.code === DUPLICATED_DATA_ERROR) {
-        return res.status(409).send({ message: 'Данный email уже занят' });
+        next(throwConflictError('Данный email уже занят'));
       }
       if (err.name === 'ValidationError') {
-        return res.status(400).send({ message: 'Переданы некорректные данные пользователя' });
+        next(throwBadRequestError('Переданы некорректные данные пользователя'));
       }
-      return res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
+      next();
     });
 };
 
