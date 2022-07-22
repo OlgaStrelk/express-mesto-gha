@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 // const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const isAuthorized = require('./middlewares/isAuthorized');
+const { throwNotFoundError } = require('./helpers/errors')
 
 const app = express();
 const { PORT = 3000 } = process.env;
@@ -22,9 +23,8 @@ app.use('/', require('./routes/index'));
 app.use('/', isAuthorized, require('./routes/users'));
 app.use('/', isAuthorized, require('./routes/cards'));
 
-// app.use((req, res) => {
-//   res.status(404).send({ message: 'Страница не найдена' });
-// });
+app.all('*', (req, res, next) => {
+  next(throwNotFoundError('Страница не найдена'))});
 
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
@@ -36,8 +36,6 @@ app.use((err, req, res, next) => {
         ? 'На сервере произошла ошибка'
         : message,
     });
-
-  console.error(err.stack);
 });
 
 app.listen(PORT, () => {
