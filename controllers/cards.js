@@ -15,12 +15,18 @@ module.exports.createCard = (req, res) => {
 };
 
 module.exports.deleteCardById = (req, res) => {
-  Card.findByIdAndRemove(req.params.cardId)
+  Card.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
         res.status(404).send({ message: 'Карточка с указанным _id не найдена' });
+      }
+      if (req.user._id !== card.owner.toString()) {
+        res.status(403).send({ message: 'Отсутствуют права для удаления данной карточки' });
       } else {
-        res.send({ data: card });
+        Card.findByIdAndRemove(req.params.cardId)
+          .then((removedCard) => {
+            res.send({ data: removedCard });
+          });
       }
     })
     .catch((err) => {
