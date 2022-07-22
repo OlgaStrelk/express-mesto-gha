@@ -1,27 +1,28 @@
 const Card = require('../models/card');
+const { throwBadRequestError, throwNotFoundError, throwForbiddenError } = require('../helpers/errors');
 
-module.exports.createCard = (req, res) => {
+module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;
 
   Card.create({ name, link, owner: req.user._id })
     .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные карточки' });
+        throwBadRequestError('Переданы некорректные данные карточки');
       } else {
-        res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
+        next();
       }
     });
 };
 
-module.exports.deleteCardById = (req, res) => {
+module.exports.deleteCardById = (req, res, next) => {
   Card.findById(req.params.cardId)
     .then((card) => {
       if (!card) {
-        res.status(404).send({ message: 'Карточка с указанным _id не найдена' });
+        throwNotFoundError('Карточка с указанным _id не найдена');
       }
       if (req.user._id !== card.owner.toString()) {
-        res.status(403).send({ message: 'Отсутствуют права для удаления данной карточки' });
+        throwForbiddenError('Отсутствуют права для удаления данной карточки');
       } else {
         Card.findByIdAndRemove(req.params.cardId)
           .then((removedCard) => {
@@ -31,26 +32,26 @@ module.exports.deleteCardById = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Переданы некорректные данные карточки' });
+        throwBadRequestError('Переданы некорректные данные карточки');
       } else {
-        res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
+        next();
       }
     });
 };
 
-module.exports.getCards = (req, res) => {
+module.exports.getCards = (req, res, next) => {
   Card.find({})
     .then((card) => res.send({ data: card }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({ message: 'Переданы некорректные данные карточки' });
+        throwBadRequestError('Переданы некорректные данные карточки');
       } else {
-        res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
+        next();
       }
     });
 };
 
-module.exports.likeCard = (req, res) => {
+module.exports.likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
@@ -58,21 +59,21 @@ module.exports.likeCard = (req, res) => {
   )
     .then((card) => {
       if (!card) {
-        res.status(404).send({ message: 'Передан несуществующий id карточки.' });
+        throwNotFoundError('Передан несуществующий id карточки.');
       } else {
         res.send({ data: card });
       }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Переданы некорректные данные для постановки лайка.' });
+        throwBadRequestError('Переданы некорректные данные для постановки лайка.');
       } else {
-        res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
+        next();
       }
     });
 };
 
-module.exports.dislikeCard = (req, res) => {
+module.exports.dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
@@ -80,16 +81,16 @@ module.exports.dislikeCard = (req, res) => {
   )
     .then((card) => {
       if (!card) {
-        res.status(404).send({ message: 'Передан несуществующий id карточки.' });
+        throwNotFoundError('Передан несуществующий id карточки.');
       } else {
         res.send({ data: card });
       }
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Переданы некорректные данные для снятия лайка.' });
+        throwBadRequestError('Переданы некорректные данные для снятия лайка.');
       } else {
-        res.status(500).send({ message: 'Произошла ошибка на стороне сервера' });
+        next();
       }
     });
 };

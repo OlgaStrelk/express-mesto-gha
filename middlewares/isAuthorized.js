@@ -1,10 +1,5 @@
 const { checkToken } = require('../helpers/jwt');
-
-const throwUnauthorizedError = () => {
-  const error = new Error('Необходимо авторизоваться');
-  error.statusCode = 401;
-  throw error;
-};
+const { throwUnauthorizedError } = require('../helpers/errors');
 
 const isAuthorized = (req, res, next) => {
   const { authorization } = req.headers;
