@@ -49,6 +49,7 @@ const userSchema = new mongoose.Schema({
       },
       message: 'Пароль недостаточно надёжный',
     },
+    select: false,
   },
 });
 

@@ -5,7 +5,8 @@ const bodyParser = require('body-parser');
 // const helmet = require('helmet');
 const cookieParser = require('cookie-parser');
 const isAuthorized = require('./middlewares/isAuthorized');
-const { throwNotFoundError } = require('./helpers/errors')
+const { throwNotFoundError } = require('./helpers/errors');
+const { errors } = require('celebrate');
 
 const app = express();
 const { PORT = 3000 } = process.env;
@@ -24,7 +25,10 @@ app.use('/', isAuthorized, require('./routes/users'));
 app.use('/', isAuthorized, require('./routes/cards'));
 
 app.all('*', (req, res, next) => {
-  next(throwNotFoundError('Страница не найдена'))});
+  next(throwNotFoundError('Страница не найдена'));
+});
+
+app.use(errors());
 
 app.use((err, req, res, next) => {
   const { statusCode = 500, message } = err;
