@@ -1,5 +1,5 @@
 const Card = require('../models/card');
-const { throwBadRequestError, throwNotFoundError, throwForbiddenError } = require('../helpers/errors');
+const { throwBadRequestError, throwNotFoundError, throwForbiddenError } = require('../utils/errors');
 
 module.exports.createCard = (req, res, next) => {
   const { name, link } = req.body;

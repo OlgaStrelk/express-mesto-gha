@@ -1,7 +1,7 @@
 const bcrypt = require('bcryptjs');
-const { generateToken } = require('../helpers/jwt');
+const { generateToken } = require('../utils/jwt');
 const User = require('../models/user');
-const { throwForbiddenError, throwBadRequestError, throwConflictError } = require('../helpers/errors');
+const { throwForbiddenError, throwBadRequestError, throwConflictError } = require('../utils/errors');
 
 // const { NODE_ENV, JWT_SECRET } = process.env;
 const DUPLICATED_DATA_ERROR = 11000;
