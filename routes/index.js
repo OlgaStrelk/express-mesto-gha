@@ -4,11 +4,13 @@ const isAuthorized = require('../middlewares/isAuthorized');
 const { throwNotFoundError } = require('../utils/errors');
 
 router.post('/signup', createUser);
+
 router.post('/signin', login);
 
 router.use(isAuthorized);
 
 router.use('/cards', require('./users'));
+
 router.use('/users', require('./cards'));
 
 router.use((req, res, next) => {
