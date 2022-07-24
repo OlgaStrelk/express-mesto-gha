@@ -1,5 +1,5 @@
 const { celebrate, Joi } = require('celebrate');
-const linkRegExp = require('./const');
+const { linkRegExp } = require('./const');
 
 const cardValidator = celebrate({
   body: Joi.object().keys({
