@@ -12,7 +12,9 @@ module.exports.getUserById = (req, res, next) => {
       }
     })
     .catch((err) => {
-      if (err.name === 'CastError') { next(throwBadRequestError('Отправлены некорректные данные')); } else {
+      if (err.name === 'CastError') {
+        next(throwBadRequestError('Отправлены некорректные данные'));
+      } else {
         next();
       }
     });
@@ -25,15 +27,23 @@ module.exports.getUsers = (req, res, next) => {
 };
 
 module.exports.getProfile = (req, res, next) => {
+  console.log('Пришел');
   User.findById(req.user._id)
-    .then((user) => res.send({ data: user }))
+    .then((user) => {
+      console.log(user);
+      res.send({ data: user });
+    })
     .catch(() => next());
 };
 
 module.exports.updateProfile = (req, res, next) => {
   const { name, about } = req.body;
 
-  User.findByIdAndUpdate(req.user._id, { name, about }, { new: true, runValidators: true })
+  User.findByIdAndUpdate(
+    req.user._id,
+    { name, about },
+    { new: true, runValidators: true },
+  )
     .then((user) => {
       if (!user) {
         next(throwNotFoundError(NOT_FOUND_USER_ERR_MESSAGE));
@@ -43,7 +53,9 @@ module.exports.updateProfile = (req, res, next) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(throwBadRequestError('Переданы некорректные данные пользователя.'));
+        next(
+          throwBadRequestError('Переданы некорректные данные пользователя.'),
+        );
       } else {
         next();
       }
@@ -57,11 +69,17 @@ module.exports.updateAvatar = (req, res, next) => {
     .then((user) => {
       if (!user) {
         next(throwNotFoundError(NOT_FOUND_USER_ERR_MESSAGE));
-      } else { res.send({ data: user }); }
+      } else {
+        res.send({ data: user });
+      }
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(throwBadRequestError('Переданы некорректные данные при обновлении аватара'));
+        next(
+          throwBadRequestError(
+            'Переданы некорректные данные при обновлении аватара',
+          ),
+        );
       } else {
         next();
       }
