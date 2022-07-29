@@ -8,7 +8,7 @@ const {
   getProfile,
 } = require('../controllers/users');
 
-const { idValidator, avatarValidator, profileValidator } = require('../middlewares/validator')
+const { idValidator, avatarValidator, profileValidator } = require('../middlewares/validator');
 
 router.get('/', getUsers);
 
