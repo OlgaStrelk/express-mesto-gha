@@ -1,10 +1,10 @@
 const { checkToken } = require('../utils/jwt');
-const { throwUnauthorizedError } = require('../utils/errors');
+const { UnauthorizedError } = require('../utils/errors/UnauthorizedError');
 
 const isAuthorized = (req, res, next) => {
   const { authorization } = req.headers;
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    next(throwUnauthorizedError());
+    throw UnauthorizedError();
   }
 
   const token = authorization.replace('Bearer ', '');
@@ -13,7 +13,7 @@ const isAuthorized = (req, res, next) => {
   try {
     payload = checkToken(token);
   } catch (err) {
-    next(throwUnauthorizedError());
+    throw UnauthorizedError();
   }
   req.user = payload;
 

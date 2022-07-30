@@ -28,6 +28,7 @@ module.exports.getUsers = (req, res, next) => {
 };
 
 module.exports.getProfile = (req, res, next) => {
+  console.log('тут');
   User.findById(req.user._id)
     .then((user) => {
       res.send({ data: user });
