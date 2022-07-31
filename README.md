@@ -33,6 +33,8 @@ RESTful API для проекта "Mesto", интерактивной стран
 * добавить функцию восстановления пароля
 
 [Ссылка на репозиторий с реализацией на нативном JS;](https://github.com/OlgaStrelk/mesto)
+
 [Ссылка на репозиторий с реализацией на React;](https://github.com/OlgaStrelk/mesto-react)
+
 [Деплой фронтенда](https://olgastrelk.github.io/mesto-react)
 
