@@ -17,7 +17,7 @@ module.exports.createUser = (req, res, next) => {
     .then((hash) => User.create({
       name, about, avatar, email, password: hash,
     }))
-    .then((user) => res.status(201).send(`Пользователь ${user.name} с почтой ${user.email} зарегистрирован`))
+    .then((user) => res.status(201).send({ data: user }))
     .catch((err) => {
       if (err.code === DUPLICATED_DATA_ERROR) {
         next(new ConflictError('Данный email уже занят'));
