@@ -4,7 +4,7 @@ const { UnauthorizedError } = require('../utils/errors/UnauthorizedError');
 const isAuthorized = (req, res, next) => {
   const { authorization } = req.headers;
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    throw UnauthorizedError();
+    next(new UnauthorizedError());
   }
 
   const token = authorization.replace('Bearer ', '');
@@ -13,7 +13,7 @@ const isAuthorized = (req, res, next) => {
   try {
     payload = checkToken(token);
   } catch (err) {
-    throw UnauthorizedError();
+    next(new UnauthorizedError());
   }
   req.user = payload;
 
