@@ -1,13 +1,19 @@
 const { celebrate, Joi } = require('celebrate');
-const { linkRegExp } = require('../utils/regexp');
+const { regEx } = require('../utils/regex');
 
-const UserValidator = celebrate({
+const userValidator = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().pattern(linkRegExp),
+    avatar: Joi.string().pattern(regEx),
     email: Joi.string().email().required(),
     password: Joi.string().required(),
+  }),
+});
+
+const userIdValidator = celebrate({
+  params: Joi.object().keys({
+    userId: Joi.string().length(24).hex().required(),
   }),
 });
 
@@ -20,27 +26,28 @@ const profileValidator = celebrate({
 
 const avatarValidator = celebrate({
   body: Joi.object().keys({
-    avatar: Joi.string().required().pattern(linkRegExp),
+    avatar: Joi.string().required().pattern(regEx),
   }),
 });
 
 const cardValidator = celebrate({
   body: Joi.object().keys({
     name: Joi.string().min(2).max(30).required(),
-    link: Joi.string().required().pattern(linkRegExp),
+    link: Joi.string().required().pattern(regEx),
   }),
 });
 
-const idValidator = celebrate({
+const cardIdValidator = celebrate({
   params: Joi.object().keys({
     cardId: Joi.string().length(24).hex().required(),
   }),
 });
 
 module.exports = {
-  UserValidator,
-  idValidator,
+  userValidator,
+  userIdValidator,
   profileValidator,
   avatarValidator,
   cardValidator,
+  cardIdValidator,
 };

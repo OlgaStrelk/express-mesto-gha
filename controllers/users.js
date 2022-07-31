@@ -24,16 +24,19 @@ module.exports.getUserById = (req, res, next) => {
 module.exports.getUsers = (req, res, next) => {
   User.find({})
     .then((user) => res.send({ data: user }))
-    .catch(() => next());
+    .catch(next);
 };
 
 module.exports.getProfile = (req, res, next) => {
-  console.log('тут');
   User.findById(req.user._id)
     .then((user) => {
-      res.send({ data: user });
+      if (!user) {
+        throw NotFoundError(NOT_FOUND_USER_ERR_MESSAGE);
+      } else {
+        res.send({ data: user });
+      }
     })
-    .catch(() => next());
+    .catch(next);
 };
 
 module.exports.updateProfile = (req, res, next) => {
