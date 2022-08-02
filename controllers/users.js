@@ -3,13 +3,22 @@ const BadRequestError = require('../utils/errors/BadRequestError');
 const NotFoundError = require('../utils/errors/NotFoundError');
 
 const NOT_FOUND_USER_ERR_MESSAGE = 'Пользователь с таким id не найден';
+
 module.exports.getUserById = (req, res, next) => {
   User.findById(req.params.id)
     .then((user) => {
       if (!user) {
         next(new NotFoundError(NOT_FOUND_USER_ERR_MESSAGE));
       } else {
-        res.send({ data: user });
+        res.send({
+          data: {
+            name: user.name,
+            about: user.about,
+            avatar: user.avatar,
+            email: user.email,
+            _id: user._id,
+          },
+        });
       }
     })
     .catch((err) => {
@@ -33,7 +42,9 @@ module.exports.getProfile = (req, res, next) => {
       if (!user) {
         next(new NotFoundError(NOT_FOUND_USER_ERR_MESSAGE));
       } else {
-        res.send({ data: user });
+        res.send({
+          data: user,
+        });
       }
     })
     .catch(next);
