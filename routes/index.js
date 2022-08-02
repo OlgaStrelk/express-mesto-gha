@@ -6,7 +6,7 @@ const NotFoundError = require('../utils/errors/NotFoundError');
 
 router.post('/signup', userValidator, createUser);
 
-router.post('/signin', login);
+router.post('/signin', userValidator, login);
 
 router.use(isAuthorized);
 
