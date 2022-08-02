@@ -36,6 +36,6 @@ const cardSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
-});
+}, { new: true, runValidators: true });
 
 module.exports = mongoose.model('card', cardSchema);

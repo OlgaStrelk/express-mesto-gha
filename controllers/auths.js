@@ -1,7 +1,6 @@
 const bcrypt = require('bcryptjs');
 const { generateToken } = require('../utils/jwt');
 const User = require('../models/user');
-const ForbiddenError = require('../utils/errors/ForbiddenError');
 const BadRequestError = require('../utils/errors/BadRequestError');
 const ConflictError = require('../utils/errors/ConflictError');
 
@@ -27,11 +26,9 @@ module.exports.createUser = (req, res, next) => {
     .catch((err) => {
       if (err.code === DUPLICATED_DATA_ERROR) {
         next(new ConflictError('Данный email уже занят'));
-      }
-      if (err.name === 'ValidationError') {
+      } else if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные пользователя'));
-      }
-      next(err);
+      } else next(err);
     });
 };
 
@@ -47,13 +44,5 @@ module.exports.login = (req, res, next) => {
         })
         .send({ token });
     })
-    .catch((err) => {
-      if (err.name === 'ValidationError') {
-        next(new BadRequestError('Переданы некорректные данные пользователя'));
-      }
-      if (err.statusCode === 403) {
-        next(new ForbiddenError(err.message));
-      }
-      next(err);
-    });
+    .catch(next);
 };
