@@ -22,6 +22,12 @@ const userSchema = new mongoose.Schema({
     type: String,
     default:
       'https://www.novochag.ru/upload/img_cache/e08/e08c959ebbe5335ba627a87fb73ce72a_ce_1042x720x56x0_cropped_666x444.jpg',
+    validate: {
+      validator(avatar) {
+        return validator.isURL(avatar);
+      },
+      message: 'Не является ссылкой',
+    },
   },
 
   email: {
