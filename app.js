@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const { errors } = require('celebrate');
 const cors = require('./middlewares/cors');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const errorHandler = require('./middlewares/errorHandler');
 
@@ -25,9 +26,17 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 app.use(cookieParser());
 // app.use(helmet());
+app.use(requestLogger);
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 
 app.use('/', require('./routes/index'));
 
+app.use(errorLogger);
 app.use(errors());
 
 app.use(errorHandler);
