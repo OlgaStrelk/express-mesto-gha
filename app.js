@@ -14,9 +14,11 @@ const errorHandler = require('./middlewares/errorHandler');
 const app = express();
 app.use(cors);
 
-const { PORT = 3000 } = process.env;
+const { PORT = 3001 } = process.env;
+mongoose.connect('mongodb://localhost:27017/mestodb');
 
-mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
+// localhost:27017
+// mongoose.connect('mongodb://127.0.0.1:27017/mestodb');
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', console.log.bind(console, 'connection with db is set'));
